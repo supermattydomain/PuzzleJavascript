@@ -11,7 +11,7 @@ function randomIntBetween(min, max) {
 }
 
 function sgn(num) {
-	return (num < 0) ? -1 : 1;
+	return (num < 0) ? -1 : ((num > 0) ? 1 : 0);
 }
 
 function distance(x1, y1, x2, y2) {

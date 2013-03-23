@@ -18,5 +18,6 @@
 			// this didn't have a next sibling; b goes at the end
 			this.parent().append(b);
 		}
+		return this;
 	};
 })(jQuery);

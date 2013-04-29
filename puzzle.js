@@ -47,10 +47,10 @@ function Puzzle(elt, img, rows, cols) {
 			// this tile & hole are already neighbours
 		} else if (this.holeCol == col) {
 			// row diff > 1 && no col diff - recurse rows
-			this.moveTiles(row + sgn(this.holeRow - row), col);
+			this.moveTiles(row + sign(this.holeRow - row), col);
 		} else {
 			// col diff > 1 && no row diff - recurse cols
-			this.moveTiles(row, col + sgn(this.holeCol - col));
+			this.moveTiles(row, col + sign(this.holeCol - col));
 		}
 		// Hole is now next to clicked tile.
 		// Swap tile and hole and report success.
@@ -102,4 +102,5 @@ $(function() {
 			puzzle.scramble();
 		});
 	});
+	$('button, input[type="button"], input[type="checkbox"]').button();
 });

@@ -1,0 +1,11 @@
+@CHARSET "UTF-8";
+
+.imjqmosaic_tile {
+	cursor: pointer;
+	margin: 0;
+}
+
+.empty {
+	background-color: #999999;
+	cursor: default;
+}

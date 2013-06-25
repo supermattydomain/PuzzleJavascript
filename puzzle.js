@@ -22,29 +22,42 @@ function Puzzle(elt, img, rows, cols) {
 		tileMargin : '1',
 		tileBorderRadius : '0',
 	});
-	this.getTile = function(row, col) {
+	// All tiles except the empty square attempt to slide toward the empty square when clicked
+	$('.imjqmosaic_tile').on('click', function() {
+		var index = that.getTileIndex(this);
+		that.moveTiles(Math.floor(index / that.cols), index % that.cols);
+	});
+	// The empty square has no background and does nothing if clicked
+	this.getTile(this.holeRow, this.holeCol)
+	// Setting CSS attributes directly here over-rides the element-specific background image
+	.css('background-image', 'none')
+	.addClass('empty').off('click');
+}
+
+$.extend(Puzzle.prototype, {
+	getTile: function(row, col) {
 		return $($('#' + this.elt + ' .imjqmosaic_tile')[row * this.cols + col]);
-	};
-	this.getTileIndex = function(tile) {
+	},
+	getTileIndex: function(tile) {
 		return $('#' + this.elt + ' .imjqmosaic_tile').index(tile);
-	};
-	this.swapTiles = function(row, col) {
+	},
+	swapTiles: function(row, col) {
 		var tile1 = this.getTile(row, col), tile2 = this.getTile(this.holeRow, this.holeCol);
 		tile1.swapWith(tile2);
 		this.holeRow = row;
 		this.holeCol = col;
-	};
-	this.moveTiles = function(row, col) {
-		if ((row == this.holeRow) == (col == this.holeCol)) { // not xor
+	},
+	moveTiles: function(row, col) {
+		if ((row === this.holeRow) === (col === this.holeCol)) { // not xor
 			/*
 			 * Can't move tiles diagonally, and can't move the empty hole. So
 			 * precisely one of (clickRow != holeRow) and (clickCol != holeCol)
 			 * must obtain to move.
 			 */
 			return false;
-		} else if (1 == Math.abs(this.holeCol - col) || 1 == Math.abs(this.holeRow - row)) {
+		} else if (1 === Math.abs(this.holeCol - col) || 1 === Math.abs(this.holeRow - row)) {
 			// this tile & hole are already neighbours
-		} else if (this.holeCol == col) {
+		} else if (this.holeCol === col) {
 			// row diff > 1 && no col diff - recurse rows
 			this.moveTiles(row + sign(this.holeRow - row), col);
 		} else {
@@ -55,19 +68,11 @@ function Puzzle(elt, img, rows, cols) {
 		// Swap tile and hole and report success.
 		this.swapTiles(row, col);
 		return true;
-	};
-	// All tiles except the empty square attempt to slide toward the empty square when clicked
-	$('.imjqmosaic_tile').css({cursor: 'pointer', margin: '0px'}).on('click', function() {
-		var index = that.getTileIndex(this);
-		var row = Math.floor(index / that.cols), col = index % that.cols;
-		that.moveTiles(row, col);
-	});
-	// The empty square has no background and does nothing if clicked
-	this.getTile(this.holeRow, this.holeCol).css({'background-image': 'none', 'background-color': '#999999', cursor: 'default'}).off('click');
+	},
 	/**
 	 * Shuffle the empty row, beginning at some random non-empty column within it.
 	 */
-	this.shuffleRow = function() {
+	shuffleRow: function() {
 		// Starting column
 		var col = this.holeCol;
 		col += randomIntBetween(1, this.cols - 1);
@@ -77,21 +82,21 @@ function Puzzle(elt, img, rows, cols) {
 	/**
 	 * Shuffle the empty column, beginning at some random non-empty row within it.
 	 */
-	this.shuffleCol = function() {
+	shuffleCol: function() {
 		// Starting row
 		var row = this.holeRow;
 		row += randomIntBetween(1, this.rows - 1);
 		row %= this.rows;
 		this.moveTiles(row, this.holeCol);
 	},
-	this.scramble = function() {
+	scramble: function() {
 		var i;
 		for (i = 0; i < this.rows * this.cols; i++) {
 			this.shuffleRow();
 			this.shuffleCol();
 		}
-	};
-}
+	}
+});
 
 $(function() {
 	$('button, input[type="button"], input[type="checkbox"]').button();

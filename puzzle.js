@@ -35,7 +35,6 @@ function Puzzle(elt, img, rows, cols) {
 		this.holeCol = col;
 	};
 	this.moveTiles = function(row, col) {
-		// debug('moveTiles ' , row, col);
 		if ((row == this.holeRow) == (col == this.holeCol)) { // not xor
 			/*
 			 * Can't move tiles diagonally, and can't move the empty hole. So
@@ -95,12 +94,13 @@ function Puzzle(elt, img, rows, cols) {
 }
 
 $(function() {
-	var originalImage = $('#puzzleImage');
-	originalImage.load(function() {
-		var puzzle = new Puzzle('puzzle', originalImage, 4, 4);
-		$('#buttonScramble').on('click', function() {
-			puzzle.scramble();
-		});
-	});
 	$('button, input[type="button"], input[type="checkbox"]').button();
+});
+
+$(window).on('load', function() {
+	var originalImage = $('#puzzleImage');
+	var puzzle = new Puzzle('puzzle', originalImage, 4, 4);
+	$('#buttonScramble').on('click', function() {
+		puzzle.scramble();
+	});
 });
